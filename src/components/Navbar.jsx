@@ -1,4 +1,4 @@
-import { LayoutDashboard, HeartPulse, Monitor, Plus } from "lucide-react";
+import { LayoutDashboard, HeartPulse, Monitor, Plus, FileCode } from "lucide-react";
 import { NavLink } from "react-router-dom";
 
 export default function Navbar() {
@@ -54,6 +54,16 @@ export default function Navbar() {
           }
         >
           <Plus size={18} /> <span>App Onboarding</span>
+        </NavLink>
+        <NavLink
+          to="/automationscripts"
+          className={({ isActive }) =>
+            `flex items-center space-x-1 ${
+              isActive ? "text-blue-600 font-semibold" : "text-gray-600"
+            }`
+          }
+        >
+          <FileCode size={18} /> <span>Automation Scripts</span>
         </NavLink>
       </div>
 

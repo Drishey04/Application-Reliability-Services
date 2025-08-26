@@ -1,59 +1,40 @@
-// src/pages/Dashboard.jsx
-import React from "react";
-import { AlertTriangle } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
-const applications = [
-  { name: "Case", incidents: { P1: 1, P2: 0, P3: 2, P4: 0, P5: 0 } },
-  { name: "Atwork", incidents: { P1: 0, P2: 1, P3: 0, P4: 3, P5: 0 } },
-  { name: "Etask", incidents: { P1: 0, P2: 0, P3: 1, P4: 0, P5: 0 } },
-  { name: "Espa", incidents: { P1: 0, P2: 0, P3: 0, P4: 0, P5: 2 } },
-  { name: "ProSuite", incidents: { P1: 2, P2: 1, P3: 0, P4: 0, P5: 0 } },
-  { name: "Laas", incidents: { P1: 0, P2: 0, P3: 0, P4: 1, P5: 0 } },
+const apps = [
+  { id: "case", name: "Case Management", url: "https://case.example.com", status: "healthy" },
+  { id: "etask", name: "E-Task", url: "https://etask.example.com", status: "warning" },
+  { id: "atwork", name: "AtWork", url: "https://atwork.example.com", status: "critical" },
+  { id: "espa", name: "ESPA", url: "https://espa.example.com", status: "healthy" },
+  { id: "laas", name: "LAAS", url: "https://laas.example.com", status: "warning" },
+  { id: "prosuite", name: "ProSuite", url: "https://prosuite.example.com", status: "healthy" },
 ];
 
-const incidentColors = {
-  P1: "bg-red-500 text-white",
-  P2: "bg-orange-500 text-white",
-  P3: "bg-yellow-400 text-black",
-  P4: "bg-blue-400 text-white",
-  P5: "bg-green-500 text-white",
-};
-
 export default function Dashboard() {
+  const navigate = useNavigate();
+
   return (
-    <div className="p-6">
-      <h2 className="text-2xl font-bold mb-6">Application Diagnostics Dashboard</h2>
-
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {applications.map((app, index) => (
-          <div
-            key={index}
-            className="bg-white rounded-xl shadow-md p-6 hover:shadow-lg transition"
+    <div className="p-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      {apps.map((app) => (
+        <div
+          key={app.id}
+          className="bg-white rounded-2xl shadow p-4 cursor-pointer hover:shadow-lg transition"
+          onClick={() => navigate(`/app/${app.id}`)}
+        >
+          <h2 className="text-lg font-semibold">{app.name}</h2>
+          <p className="text-sm text-gray-500">{app.url}</p>
+          <span
+            className={`inline-block mt-2 px-2 py-1 rounded-full text-xs font-medium ${
+              app.status === "healthy"
+                ? "bg-green-100 text-green-700"
+                : app.status === "warning"
+                ? "bg-yellow-100 text-yellow-700"
+                : "bg-red-100 text-red-700"
+            }`}
           >
-            {/* Header */}
-            <h3 className="text-xl font-semibold mb-4">{app.name}</h3>
-
-            {/* Incidents Row (with top & bottom border) */}
-            <div className="border-y border-gray-300 py-3">
-              <h4 className="font-medium mb-2 flex items-center gap-2">
-                <AlertTriangle className="w-4 h-4 text-red-500" /> Incidents
-              </h4>
-              <div className="flex gap-2 flex-wrap">
-                {Object.entries(app.incidents).map(([priority, count], j) => (
-                  <span
-                    key={j}
-                    className={`px-2 py-1 rounded-md text-xs font-semibold ${
-                      incidentColors[priority]
-                    }`}
-                  >
-                    {priority}: {count}
-                  </span>
-                ))}
-              </div>
-            </div>
-          </div>
-        ))}
-      </div>
+            {app.status}
+          </span>
+        </div>
+      ))}
     </div>
   );
 }

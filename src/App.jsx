@@ -6,6 +6,8 @@ import Onboarding from "./pages/Onboarding";
 import MonitoringSetup from "./pages/MonitoringSetup";
 import Settings from "./pages/Settings";
 import HealthStatus from "./pages/healthStatus";
+import AutomationScripts from "./pages/AutomationScripts";
+import AppDetails from "./pages/AppDetails";
 
 export default function App() {
   return (
@@ -28,6 +30,8 @@ export default function App() {
               <Route path="/onboarding" element={<Onboarding />} />
               <Route path="/monitoring" element={<MonitoringSetup />} />
               <Route path="/settings" element={<Settings />} />
+              <Route path="/automationscripts" element={<AutomationScripts />} />
+              <Route path="/app/:appId" element={<AppDetails />} />
             </Routes>
           </main>
         </div>
