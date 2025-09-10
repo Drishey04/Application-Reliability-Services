@@ -9,7 +9,7 @@ const AutomationScripts = () => {
   const scripts = [
     {
       id: 1,
-      name: "Frontend Deployment Pipeline",
+      name: "Prosuite",
       type: "Deployment",
       description: "Automated deployment for React frontend with build optimization",
       lastRun: "2 hours ago",

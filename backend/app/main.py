@@ -1,8 +1,9 @@
 from fastapi import FastAPI, WebSocket, WebSocketDisconnect
 from fastapi.middleware.cors import CORSMiddleware
 from app.routers import run_script
+from app.routers import run_prosuite
 import subprocess
-
+ 
 app = FastAPI()
 
 # ✅ Allow frontend requests
@@ -17,6 +18,7 @@ app.add_middleware(
 
 # Routers
 app.include_router(run_script.router)
+app.include_router(run_prosuite.router)
 
 @app.websocket("/ws/run-script")
 async def run_script_ws(websocket: WebSocket):

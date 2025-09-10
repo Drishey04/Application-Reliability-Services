@@ -1,61 +1,79 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { useParams, useNavigate } from "react-router-dom";
+import LogViewer from "../components/LogViewer";
 
 const ScriptRunner = () => {
   const { scriptName } = useParams();
   const navigate = useNavigate();
   const [logs, setLogs] = useState([]);
+  const socketRef = useRef(null);
 
-  useEffect(() => {
-    const ws = new WebSocket("ws://127.0.0.1:8000/ws/run-script");
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
 
-    ws.onopen = () => {
-      setLogs((prev) => [...prev, `▶️ Starting ${scriptName}...`]);
+  const handleRun = () => {
+    const socket = new WebSocket("ws://localhost:8000/ws/run-prosuite");
+    socketRef.current = socket;
+
+    socket.onopen = () => {
+      setLogs(["🔗 Connection open"]);
+      socket.send(JSON.stringify({ username, password }));
     };
 
-    ws.onmessage = (event) => {
+    socket.onmessage = (event) => {
       setLogs((prev) => [...prev, event.data]);
     };
 
-    ws.onerror = () => {
-      setLogs((prev) => [...prev, "⚠️ Error connecting to WebSocket"]);
+    socket.onclose = () => {
+      setLogs((prev) => [...prev, "❌ Connection closed"]);
     };
 
-    ws.onclose = () => {
-      setLogs((prev) => [...prev, "✅ Script execution finished"]);
+    socket.onerror = (err) => {
+      setLogs((prev) => [...prev, "⚠️ WebSocket error"]);
     };
+  };
 
-    return () => ws.close();
-  }, [scriptName]);
+  useEffect(() => {
+    return () => {
+      if (socketRef.current) socketRef.current.close();
+    };
+  }, []);
 
   return (
     <div className="p-6">
       <button
-        className="mb-4 px-4 py-2 bg-gray-600 text-white rounded"
+        className="mb-4 px-4 py-2 bg-gray-200 rounded"
         onClick={() => navigate("/automation")}
       >
-        ← Back to Scripts
+        ⬅ Back
       </button>
-      <h2 className="text-xl font-semibold mb-2">Running Script: {scriptName}</h2>
 
-      <div className="bg-black text-green-400 p-4 rounded h-[70vh] overflow-y-auto font-mono text-sm">
-        {logs.map((line, idx) => (
-          <div key={idx}>{line}</div>
-        ))}
+      <h2 className="text-xl font-semibold mb-4">Running: {scriptName}</h2>
+
+      <div className="mb-4 flex gap-4">
+        <input
+          type="text"
+          placeholder="Username"
+          className="border p-2 rounded w-1/3"
+          value={username}
+          onChange={(e) => setUsername(e.target.value)}
+        />
+        <input
+          type="password"
+          placeholder="Password"
+          className="border p-2 rounded w-1/3"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+        />
+        <button
+          onClick={handleRun}
+          className="px-4 py-2 bg-green-500 text-white rounded"
+        >
+          ▶ Run Script
+        </button>
       </div>
 
-      <button
-        className="mt-4 px-4 py-2 bg-blue-600 text-white rounded"
-        onClick={() => {
-          const blob = new Blob([logs.join("\n")], { type: "text/plain" });
-          const link = document.createElement("a");
-          link.href = URL.createObjectURL(blob);
-          link.download = `${scriptName}-logs.txt`;
-          link.click();
-        }}
-      >
-        💾 Save Logs
-      </button>
+      <LogViewer logs={logs} />
     </div>
   );
 };
