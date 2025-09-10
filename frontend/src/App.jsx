@@ -6,13 +6,14 @@ import Header from "./components/Header";
 // Pages
 import Landing from "./pages/Landing";
 import Dashboard from "./pages/dashboard";            // keep your existing dashboard
-import HealthStatus from "./pages/HealthStatus";      // keep (grid of app cards)
+import HealthStatus from "./pages/AppHealthDashboard";      // keep (grid of app cards)
 import AppDetail from "./pages/AppDetail";            // new per-app drilldown
 import MonitoringSetup from "./pages/MonitoringSetup";
 import Onboarding from "./pages/Onboarding";
 import AutomationScripts from "./pages/AutomationScripts";
 import Reports from "./pages/Reports";
 import ScriptRunner from "./pages/ScriptRunner";
+import AppHealthDashboard from "./pages/AppHealthDashboard";
 
 export default function App() {
   return (
@@ -24,7 +25,7 @@ export default function App() {
           <Routes>
             <Route path="/" element={<Landing />} />
             <Route path="/dashboard" element={<Dashboard />} />
-            <Route path="/health" element={<HealthStatus />} />
+            <Route path="/health" element={<AppHealthDashboard />} />
             <Route path="/app/:slug" element={<AppDetail />} />
             <Route path="/monitoring" element={<MonitoringSetup />} />
             <Route path="/onboarding" element={<Onboarding />} />
